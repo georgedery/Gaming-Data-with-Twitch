@@ -1,0 +1,76 @@
+-- first 20 rows of stream and chat table
+SELECT * FROM stream
+LIMIT 20;
+SELECT * FROM chat
+LIMIT 20;
+
+-- unique values of game in stream table
+SELECT DISTINCT game FROM stream;
+
+-- unique values of channel in stream table
+SELECT DISTINCT channel FROM stream;
+
+-- most popular games in stream
+SELECT game, COUNT(*) 
+FROM stream
+GROUP BY game
+ORDER BY COUNT(*) DESC;
+
+-- list of countries and number of LoL viewers
+SELECT country, COUNT(*)
+FROM stream
+WHERE game = 'League of Legends'
+GROUP BY country
+ORDER BY COUNT(*) DESC;
+
+-- players and number of streamers
+SELECT player, COUNT(*) 
+FROM stream
+GROUP BY player
+ORDER BY COUNT(*) DESC;
+
+-- create genre for each game
+SELECT game,
+ CASE
+  WHEN game = 'Dota 2'
+      THEN 'MOBA'
+  WHEN game = 'League of Legends' 
+      THEN 'MOBA'
+  WHEN game = 'Heroes of the Storm'
+      THEN 'MOBA'
+    WHEN game = 'Counter-Strike: Global Offensive'
+      THEN 'FPS'
+    WHEN game = 'DayZ'
+      THEN 'Survival'
+    WHEN game = 'ARK: Survival Evolved'
+      THEN 'Survival'
+  ELSE 'Other'
+  END AS 'genre',
+  COUNT(*)
+FROM stream
+GROUP BY game
+ORDER BY COUNT(*) DESC;
+
+-- first 10 rows of time from stream table
+SELECT time
+FROM stream
+LIMIT 10;
+
+-- return the seconds of the time
+SELECT time,
+  strftime('%S', time)
+FROM stream
+GROUP BY time
+LIMIT 20;
+
+-- return the hours of the time and view count for each hour
+SELECT strftime('%H', time), COUNT(*)
+FROM stream
+WHERE country = 'CA'
+GROUP BY strftime('%S', time);
+
+SELECT *
+FROM stream
+JOIN chat 
+  ON stream.device_id 
+= chat.device_id;
